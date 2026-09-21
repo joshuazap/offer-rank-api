@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Offer Rank</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --ink: #1a1f24;
+      --muted: #5b6570;
+      --accent: #1f4e79;
+      --card: #fff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+      background: linear-gradient(160deg, #e8eef4, var(--bg) 40%, #eef2f0);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    main { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 { font-size: 1.75rem; margin: 0 0 0.25rem; color: var(--accent); }
+    .sub { color: var(--muted); margin-bottom: 1.5rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.4rem; }
+    select, button {
+      font: inherit;
+      padding: 0.55rem 0.75rem;
+      border-radius: 6px;
+      border: 1px solid #c5ced6;
+    }
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    .row { display: flex; align-items: end; gap: 0.5rem; margin-bottom: 1.25rem; }
+    .offer {
+      background: var(--card);
+      border-left: 4px solid var(--accent);
+      padding: 0.9rem 1rem;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    .score { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--accent); }
+    .reasons { color: var(--muted); font-size: 0.9rem; margin: 0.35rem 0 0; }
+    .error { color: #9b1c1c; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Offer Rank</h1>
+    <p class="sub">FastAPI demo: personalized consumer offers from event signals.</p>
+
+    <div class="row">
+      <div>
+        <label for="consumer">Consumer</label>
+        <select id="consumer"></select>
+      </div>
+      <button id="load" type="button">Rank offers</button>
+    </div>
+
+    <div id="results"></div>
+    <p id="error" class="error" hidden></p>
+  </main>
+
+  <script>
+    const API = "http://localhost:8000";
+    const consumerEl = document.getElementById("consumer");
+    const resultsEl = document.getElementById("results");
+    const errorEl = document.getElementById("error");
+
+    async function loadConsumers() {
+      const res = await fetch(`${API}/consumers`);
+      if (!res.ok) throw new Error("Could not load consumers. Is the API running on :8000?");
+      const data = await res.json();
+      consumerEl.innerHTML = data.map(c =>
+        `<option value="${c.external_id}">${c.external_id} (${c.segment})</option>`
+      ).join("");
+    }
+
+    async function rank() {
+      errorEl.hidden = true;
+      resultsEl.innerHTML = "Loading…";
+      const id = consumerEl.value;
+      try {
+        const res = await fetch(`${API}/consumers/${id}/recommendations?limit=5`);
+        if (!res.ok) throw new Error(await res.text());
+        const data = await res.json();
+        resultsEl.innerHTML = data.ranked.map((row, i) => `
+          <article class="offer">
+            <div><strong>#${i + 1} ${row.offer.title}</strong>
+              <span class="score"> · ${row.score}</span></div>
+            <div>${row.offer.category} · ${row.offer.sku}</div>
+            <p class="reasons">${row.reasons.join(" · ")}</p>
+          </article>
+        `).join("");
+      } catch (err) {
+        resultsEl.innerHTML = "";
+        errorEl.hidden = false;
+        errorEl.textContent = err.message || String(err);
+      }
+    }
+
+    document.getElementById("load").addEventListener("click", rank);
+    loadConsumers().catch(err => {
+      errorEl.hidden = false;
+      errorEl.textContent = err.message || String(err);
+    });
+  </script>
+</body>
+</html>
