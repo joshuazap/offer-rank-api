@@ -32,7 +32,7 @@ Try: `c_alex`, `c_blake`, `c_casey`.
 
 # Resume bullet (paste after GitHub is public)
 
-Built a FastAPI + React/HTML offer-ranking service (Docker Compose, Postgres) that scores personalized offers from consumer event signals; published OpenAPI at `/docs` and CI smoke tests.
+Built a FastAPI + React/HTML offer-ranking service (Docker Compose, Postgres) that ranks product offers per consumer from view/click/purchase history and margin, with explainable scores; published OpenAPI at `/docs` and CI smoke tests.
 
 # Upgrade path (optional, day 2)
 

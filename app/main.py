@@ -17,7 +17,11 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Offer Rank API",
-    description="Ranks personalized consumer offers from simple event signals.",
+    description=(
+        "Returns a ranked list of product offers for a consumer by combining "
+        "category engagement from their view/click/purchase history with offer "
+        "margin, and explains each score."
+    ),
     version="0.1.0",
     lifespan=lifespan,
 )

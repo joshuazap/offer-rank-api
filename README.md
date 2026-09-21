@@ -1,6 +1,6 @@
 # Offer Rank API
 
-Personal FastAPI project: rank personalized consumer offers from simple event signals.
+Personal FastAPI project that returns a ranked list of product offers for a consumer by combining category engagement from their view/click/purchase history with offer margin, and explains each score.
 
 Built to demonstrate the ConvergeCONSUMER-adjacent stack: **FastAPI + Postgres + Docker + React**.
 
@@ -36,7 +36,7 @@ Uses SQLite by default when `DATABASE_URL` is unset. Docker Compose sets Postgre
 
 ## Resume bullet (after you ship)
 
-> Built a FastAPI + React offer-ranking service (Docker Compose, Postgres) that scores personalized offers from consumer event signals; published OpenAPI contracts and CI smoke tests.
+> Built a FastAPI + React offer-ranking service (Docker Compose, Postgres) that ranks product offers per consumer from view/click/purchase history and margin, with explainable scores; published OpenAPI contracts and CI smoke tests.
 
 ## Interview talking points
 
