@@ -44,3 +44,7 @@ Uses SQLite by default when `DATABASE_URL` is unset. Docker Compose sets Postgre
 2. Ranking is intentionally simple (explainable weights), not a black-box model.
 3. Docker Compose mirrors how you ship API + DB together.
 4. Next hardening step you would add: auth, caching, observability, A/B of weight configs.
+
+## Repository
+
+https://github.com/joshuazap/offer-rank-api
